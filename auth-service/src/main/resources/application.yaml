@@ -29,5 +29,5 @@ spring:
           starttls:
             enable: true
 jwt:
-  secret: ${JWT_SECRET:food-waste-secret-key-2025}
+  secret: ${JWT_SECRET}
   expiration: 86400000  # 24h en ms
