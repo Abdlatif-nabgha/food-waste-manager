@@ -1,6 +1,7 @@
 server:
   port: 8081
-
+google:
+  client-id: YOUR_GOOGLE_CLIENT_ID
 spring:
   application:
     name: auth-service
@@ -16,7 +17,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 jwt:
   secret: ${JWT_SECRET:food-waste-secret-key-2025}
   expiration: 86400000  # 24h en ms
