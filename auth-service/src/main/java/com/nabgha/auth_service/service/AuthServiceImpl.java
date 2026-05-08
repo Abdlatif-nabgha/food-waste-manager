@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.Value;
 import com.nabgha.auth_service.dto.request.*;
 import com.nabgha.auth_service.dto.response.*;
 import com.nabgha.auth_service.entity.RefreshToken;
@@ -20,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -141,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse googleLogin(String googleClientId) {
+    public AuthResponse googleLogin(String googleIdToken) {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     new NetHttpTransport(),
@@ -150,7 +150,7 @@ public class AuthServiceImpl implements AuthService {
                     .setAudience(Collections.singletonList(googleClientId))
                     .build();
 
-            GoogleIdToken idToken = verifier.verify(googleClientId);
+            GoogleIdToken idToken = verifier.verify(googleIdToken);
 
             if (idToken == null) {
                 throw new RuntimeException("Invalid Google token.");
@@ -158,24 +158,25 @@ public class AuthServiceImpl implements AuthService {
 
             GoogleIdToken.Payload payload = idToken.getPayload();
             String email = payload.getEmail();
-            String name = (String) payload.get(email);
+            String name = (String) payload.get("name");
             String googleId = payload.getSubject();
 
+            boolean isNewUser = userRepository.findByEmail(email).isEmpty();
+
             User user = userRepository.findByEmail(email)
-                    .orElseGet(() -> {
-                        User newUser = User.builder()
-                                .email(email)
-                                .fullName(name)
-                                .googleId(googleId)
-                                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                                .authProvider(AuthProvider.GOOGLE)
-                                .enabled(true)
-                                .createdAt(LocalDateTime.now())
-                                .build();
-                        return userRepository.save(newUser);
-                    });
+                    .orElseGet(() -> userRepository.save(User.builder()
+                            .email(email)
+                            .fullName(name)
+                            .googleId(googleId)
+                            .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                            .authProvider(AuthProvider.GOOGLE)
+                            .enabled(true)
+                            .createdAt(LocalDateTime.now())
+                            .build()));
+
             String accessToken = jwtService.generateToken(user);
             String refreshToken = createRefreshToken(user);
+
             return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getFullName());
 
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 server:
   port: 8081
 google:
-  client-id: YOUR_GOOGLE_CLIENT_ID
+  client-id: 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
 spring:
   application:
     name: auth-service
