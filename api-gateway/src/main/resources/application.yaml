@@ -14,7 +14,7 @@ spring:
         - id: product-service
           uri: http://product-service:8082
           predicates:
-            - Path=/api/produits/**
+            - Path=/api/products/**, /api/categories/**
 
         - id: notification-service
           uri: http://notification-service:8083

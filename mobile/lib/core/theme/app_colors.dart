@@ -13,5 +13,8 @@ class AppColors {
   static const Color textLighter = Color(0xFF94A3B8);
   
   static const Color border = Color(0xFFE2E8F0);
-  static const Color error = Color(0xFFEF4444);
+  static const Color error = Color(0xFFEF4444); // Red
+  static const Color warning = Color(0xFFF97316); // Warm orange
+  static const Color success = Color(0xFF2E7D32); // Green
+  static const Color consumed = Color(0xFF94A3B8); // Gray
 }

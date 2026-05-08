@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtService.generateToken(user);
         String refreshToken = createRefreshToken(user);
 
-        return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getFullName());
+        return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getFullName(), user.getId());
     }
 
     @Override
@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
                     String accessToken = jwtService.generateToken(rt.getUser());
                     rt.setLastUsedAt(LocalDateTime.now());
                     refreshTokenRepository.save(rt);
-                    return new AuthResponse(accessToken, token, rt.getUser().getEmail(), rt.getUser().getFullName());
+                    return new AuthResponse(accessToken, token, rt.getUser().getEmail(), rt.getUser().getFullName(), rt.getUser().getId());
                 })
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token."));
     }
@@ -177,7 +177,7 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtService.generateToken(user);
             String refreshToken = createRefreshToken(user);
 
-            return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getFullName());
+            return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getFullName(), user.getId());
 
         } catch (Exception e) {
             throw new RuntimeException("Google authentication failed: " + e.getMessage());
