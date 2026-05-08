@@ -4,7 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/services/google_auth_service.dart';
 import '../../../../core/network/auth_storage_service.dart';
 import '../../../../core/utils/snackbar_helper.dart';
-import '../../../home/presentation/screens/home_screen.dart';
+import '../../../home/presentation/screens/main_screen.dart';
 
 class SocialButton extends StatefulWidget {
   final String text;
@@ -40,15 +40,17 @@ class _SocialButtonState extends State<SocialButton> {
             refreshToken: refreshToken,
           );
 
+          final id = response['id'];
           await AuthStorageService.saveUserInfo(
             email: email,
             fullName: fullName,
+            id: id ?? 0,
           );
 
           if (!mounted) return;
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
             (route) => false,
           );
         } else {

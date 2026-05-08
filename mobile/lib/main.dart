@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_colors.dart';
 import 'features/auth/presentation/screens/welcome_screen.dart';
+import 'features/products/presentation/providers/product_provider.dart';
 
 void main() {
   runApp(const AntiFoodWasteApp());
@@ -11,25 +13,30 @@ class AntiFoodWasteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AntiFoodWaste',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ],
+      child: MaterialApp(
+        title: 'AntiFoodWaste',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+          ),
+          useMaterial3: true,
+          scaffoldBackgroundColor: AppColors.background,
+          // Set standard app-wide styles
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: AppColors.background,
+            foregroundColor: AppColors.textDark,
+          ),
         ),
-        useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.background,
-        // Set standard app-wide styles
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: AppColors.background,
-          foregroundColor: AppColors.textDark,
-        ),
+        home: const WelcomeScreen(),
       ),
-      home: const WelcomeScreen(),
     );
   }
 }

@@ -3,7 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/snackbar_helper.dart';
 import '../../../../core/network/auth_storage_service.dart';
 import '../../data/services/auth_service.dart';
-import '../../../home/presentation/screens/home_screen.dart';
+import '../../../home/presentation/screens/main_screen.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 import '../widgets/custom_text_field.dart';
@@ -56,15 +56,17 @@ class _LoginScreenState extends State<LoginScreen> {
           refreshToken: refreshToken,
         );
         
+        final id = response['id'];
         await AuthStorageService.saveUserInfo(
           email: email,
           fullName: fullName,
+          id: id ?? 0,
         );
 
         if (!mounted) return;
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
           (route) => false,
         );
       } else {
