@@ -1,0 +1,7 @@
+# Ignore Flutter platform-specific generated files for GitHub language stats
+mobile/ios/** linguist-vendored
+mobile/android/** linguist-vendored
+mobile/macos/** linguist-vendored
+mobile/windows/** linguist-vendored
+mobile/linux/** linguist-vendored
+mobile/web/** linguist-vendored
